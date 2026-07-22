@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tarantino Classic Font - Typewriter</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap" rel="stylesheet">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #FCD116;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .tarantino-container {
+            text-align: center;
+        }
+
+        .tarantino-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 8vw;
+            color: #000000;
+            text-transform: uppercase;
+            
+            transform: scaleX(1.4);
+            transform-origin: center;
+            
+            -webkit-text-stroke: 2px #000000;
+            paint-order: stroke fill;
+
+            letter-spacing: -0.05em; 
+            line-height: 0.85; 
+            
+            margin: 0;
+            user-select: none;
+        }
+
+        /* --- АНИМАЦИИ --- */
+
+        /* 1. Анимация "шума" для каждой буквы при появлении */
+        @keyframes noise-animation {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .tarantino-title .char {
+            display: inline-block;
+            animation: noise-animation 0.4s ease-out;
+        }
+
+        /* 2. НОВАЯ: Постоянная тряска во время печати */
+        @keyframes typing-shake-animation {
+            0%, 100% { transform: translate(0, 0) scaleX(1.4); }
+            25% { transform: translate(-1px, 1px) scaleX(1.4); }
+            50% { transform: translate(1px, -1px) scaleX(1.4); }
+            75% { transform: translate(-1px, -1px) scaleX(1.4); }
+        }
+
+        .is-typing {
+            animation: typing-shake-animation 0.2s infinite;
+        }
+
+        /* 3. Анимация финальной "тряски" для всей надписи */
+        @keyframes final-shake-animation {
+            0%, 100% { transform: translate(0, 0) scaleX(1.4); }
+            10% { transform: translate(-3px, -2px) scaleX(1.4); }
+            20% { transform: translate(3px, 2px) scaleX(1.4); }
+            30% { transform: translate(-3px, 2px) scaleX(1.4); }
+            40% { transform: translate(3px, -2px) scaleX(1.4); }
+            50% { transform: translate(-2px, -1px) scaleX(1.4); }
+            60% { transform: translate(2px, 1px) scaleX(1.4); }
+            70% { transform: translate(-2px, 1px) scaleX(1.4); }
+            80% { transform: translate(2px, -1px) scaleX(1.4); }
+            90% { transform: translate(-1
+px, 0) scaleX(1.4); }
+        }
+
+        .final-shake {
+            animation: final-shake-animation 0.5s linear 4;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="tarantino-container">
+        <h1 class="tarantino-title">
+            <span id="text-container"></span>
+        </h1>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textContainer = document.getElementById('text-container');
+            const titleElement = document.querySelector('.tarantino-title');
+            const content = "Hello,<br>{{ who }},<br> ABOUT!";
+            let i = 0;
+            const typingSpeed = 200;
+
+            function type() {
+                if (i < content.length) {
+                    if (content.substring(i, i + 4) === '<br>') {
+                        textContainer.innerHTML += '<br>';
+                        i += 4;
+                    } else {
+                        const charSpan = document.createElement('span');
+                        charSpan.className = 'char';
+                        charSpan.textContent = content.charAt(i);
+                        textContainer.appendChild(charSpan);
+                        i++;
+                    }
+                    setTimeout(type, typingSpeed);
+                } else {
+                    // Когда печать закончена...
+                    setTimeout(() => {
+                        // 1. Убираем постоянную тряску
+                        titleElement.classList.remove('is-typing');
+                        // 2. Запускаем финальную тряску
+                        titleElement.classList.add('final-shake');
+                    }, 200);
+                }
+            }
+
+            // Перед началом печати добавляем класс для постоянной тряски
+            titleElement.classList.add('is-typing');
+            type();
+        });
+    </script>
+
+</body>
+</html>
